@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    tools:context="com.example.sean.classarray.AddTeacherActivity">
+
+    <TextView
+        android:id="@+id/nameTextT"
+        android:layout_alignBaseline="@+id/nameEditT"
+        android:text="Teacher Name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <EditText
+        android:id="@+id/nameEditT"
+        android:layout_alignLeft="@+id/addEditT"
+        android:layout_toRightOf="@+id/nameTextT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/addressTextT"
+        android:text="Teacher Address"
+        android:layout_alignBaseline="@+id/addEditT"
+        android:layout_below="@+id/nameTextT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <EditText
+        android:id="@+id/addEditT"
+        android:layout_below="@+id/nameEditT"
+        android:layout_toRightOf="@+id/addressTextT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:layout_below="@+id/addEditT"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <Button
+            android:text="add"
+            android:id="@+id/addTeacherBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <Button
+            android:text="cancel"
+            android:id="@+id/cancelButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</RelativeLayout>

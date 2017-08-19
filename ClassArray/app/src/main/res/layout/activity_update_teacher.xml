@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.sean.classarray.UpdateTeacher">
+
+    <TextView
+        android:id="@+id/nameTextT"
+        android:layout_alignBaseline="@+id/nameUpdateT"
+        android:text="Teacher Name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <EditText
+        android:id="@+id/nameUpdateT"
+        android:layout_alignLeft="@+id/addUpdateT"
+        android:layout_toRightOf="@+id/nameTextT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/addressTextT"
+        android:text="Teacher Address"
+        android:layout_alignBaseline="@+id/addUpdateT"
+        android:layout_below="@+id/nameTextT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <EditText
+        android:id="@+id/addUpdateT"
+        android:layout_below="@+id/nameUpdateT"
+        android:layout_toRightOf="@+id/addressTextT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:layout_below="@+id/addUpdateT"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <Button
+            android:text="update"
+            android:id="@+id/updateTeacherBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <Button
+            android:text="delete"
+            android:id="@+id/deleteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+</RelativeLayout>

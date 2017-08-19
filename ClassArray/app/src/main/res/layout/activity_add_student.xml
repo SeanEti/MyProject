@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context="com.example.sean.classarray.AddStudentActivity">
+
+    <TextView
+        android:id="@+id/nameTextS"
+        android:layout_alignBaseline="@+id/nameEditS"
+        android:text="Student Name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <EditText
+        android:layout_alignLeft="@+id/addEditS"
+        android:id="@+id/nameEditS"
+        android:layout_toRightOf="@+id/nameTextS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/addressTextS"
+        android:text="Student Address"
+        android:layout_alignBaseline="@+id/addEditS"
+        android:layout_below="@+id/nameTextS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <EditText
+        android:id="@+id/addEditS"
+        android:layout_below="@+id/nameEditS"
+        android:layout_toRightOf="@+id/addressTextS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:text="Teacher"
+        android:id="@+id/teacherView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/spinner" />
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/teacherView"
+        android:layout_below="@+id/addEditS">
+    </Spinner>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/spinner"
+        android:layout_gravity="center">
+        <Button
+            android:text="add"
+            android:id="@+id/addStudentBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <Button
+            android:text="cancel"
+            android:id="@+id/cancelBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+</RelativeLayout>
