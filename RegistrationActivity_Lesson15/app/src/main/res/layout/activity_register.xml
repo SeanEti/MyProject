@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context="com.example.sean.registrationactivity_lesson15.RegisterActivity">
+
+    <EditText
+        android:id="@+id/registerUsername"
+        android:hint="Username"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content" />
+    <EditText
+        android:id="@+id/registerPassword"
+        android:hint="Pasword"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content" />
+    <EditText
+        android:id="@+id/registerMail"
+        android:hint="Mail"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/registerButton"
+        android:text="Register"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/returnToLoginButton"
+        android:text="retun to login"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>
