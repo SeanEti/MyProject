@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">RegistrationActivity_Lesson15</string>
+    <string name="enter_email">Enter your email</string>
+    <string name="enter_password">Enter your password</string>
+    <string name="login_button_text">Login</string>
+    <string name="join_button_text">Join for free</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="password_view">Password</string>
+    <string name="back_to_login">To Login</string>
+    <string name="restore">Restore</string>
+    <string name="drawer_open">drawer open</string>
+    <string name="drawer_close">drawer close</string>
 </resources>

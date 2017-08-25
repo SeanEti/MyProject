@@ -5,6 +5,6 @@ package com.example.sean.registrationactivity_lesson15.App;
  */
 
 public class AppConfig {
-    public static final String URL_LOGIN = "http://10.100.102.9/android_login_api/login.php";
-    public static final String URL_REGISTER ="http://10.100.102.9/android_login_api/register.php";
+    public static final String URL_LOGIN = "https://lxsimple.000webhostapp.com/android_login_api/login.php";
+    public static final String URL_REGISTER ="https://lxsimple.000webhostapp.com/android_login_api/register.php";
 }

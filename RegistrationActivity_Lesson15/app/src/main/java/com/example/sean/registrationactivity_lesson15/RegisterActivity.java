@@ -76,8 +76,8 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
     private void registerUser(final String name,final String mail,final String password){
-        final String TAG_string_req = "login_req";
-        progressDialog.setMessage("User registered!");
+        final String TAG_string_req = "registration_req";
+        progressDialog.setMessage("Registering...");
         showDialog();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, AppConfig.URL_REGISTER, new Response.Listener<String>() {
             @Override
@@ -90,7 +90,7 @@ public class RegisterActivity extends AppCompatActivity {
                     if (!error) {
                         JSONObject newUser = new JSONObject("user");
                         String name = newUser.getString("name"), mail = newUser.getString("mail"), password = newUser.getString("password"), created_time = newUser.getString("ct");
-                        db.AddUser(name, password, mail, created_time);
+                        db.addUser(name, password, mail, created_time);
                         Toast.makeText(RegisterActivity.this, "User successfully registered", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                         startActivity(intent);

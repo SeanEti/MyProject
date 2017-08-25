@@ -41,15 +41,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        user = db.GetUser();
+        user = db.getUserDetails();
         String name1 = user.get("name")
-                ,mail1 = user.get("mail");
+                ,mail1 = user.get("email");
         name.setText(name1);
         mail.setText(mail1);
     }
     private void logoutUser(){
         sessionManager.SetLogin(false);
-        db.DeleteUsers();
+        db.deleteUsers();
         Intent intent = new Intent(MainActivity.this,LoginActivity.class);
         startActivity(intent);
         finish();

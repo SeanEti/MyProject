@@ -3,12 +3,14 @@ package com.example.sean.registrationactivity_lesson15;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -36,6 +38,7 @@ public class LoginActivity extends Activity {
     SessionManager sessionManager;
     HashMap<String,String> user;
     ProgressDialog progressDialog;
+    TextView emailView,passView,forgotPassView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +49,9 @@ public class LoginActivity extends Activity {
         signup = (Button) findViewById(R.id.signupButton);
         username = (EditText) findViewById(R.id.enterUsername);
         password = (EditText) findViewById(R.id.enterPassword);
+        forgotPassView = (TextView) findViewById(R.id.forgotPass);
+        emailView = (TextView) findViewById(R.id.mailView);
+        passView = (TextView) findViewById(R.id.passView);
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
@@ -58,6 +64,15 @@ public class LoginActivity extends Activity {
             startActivity(intent);
             finish();
         }
+
+        forgotPassView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this,ForgotPasswordActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,69 +99,123 @@ public class LoginActivity extends Activity {
 
     }
 
-    public void checkLogin(final String mail, final String password){//homework!!!
-        /*user = sqLiteHandler.GetUser();
-        if(mail.equals(user.get("mail"))&&password.equals(user.get("uid"))){
-            sessionManager.SetLogin(true);
-        }else
-            Toast.makeText(this, "Username or password are incorrect", Toast.LENGTH_SHORT).show();
-            */
-        final String TAG_string_request= "req_login";
-        progressDialog.setMessage("You have logged in");
+
+
+      ///////TEST
+    /**
+     * function to verify login details in mysql db
+     * */
+    private void checkLogin(final String email, final String password) {
+        // Tag used to cancel the request
+        String tag_string_req = "req_login";
+
+        progressDialog.setMessage("Logging in ...");
         showDialog();
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, AppConfig.URL_LOGIN, new Response.Listener<String>() {
+        StringRequest strReq = new StringRequest(Request.Method.POST,
+                AppConfig.URL_LOGIN, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
-                Log.d(TAG, "Login response: " + response.toString());
+                Log.d(TAG, "Login Response: " + response.toString());
                 hideDialog();
+
                 try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    boolean error = jsonObject.getBoolean("error");
+                    JSONObject jObj = new JSONObject(response);
+                    boolean error = jObj.getBoolean("error");
+
+                    // Check for error node in json
                     if (!error) {
+                        // user successfully logged in
+                        // Create login session
                         sessionManager.SetLogin(true);
-                        String uid = jsonObject.getString("uid");
-                        JSONObject user = new JSONObject("user");
-                        String name = user.getString("name"), mail = user.getString("mail"), created_time = user.getString("ct"), pass = user.getString("password");
-                        sqLiteHandler.AddUser(name, pass, mail, created_time);
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+
+                        // Now store the user in SQLite
+                        String uid = jObj.getString("uid");
+                        JSONObject user = jObj.getJSONObject("user");
+                        String name = user.getString("name");
+                        String email = user.getString("email");
+                        String created_at = user.getString("created_at");
+
+                        // Inserting row in users table
+                        sqLiteHandler.addUser(name, email, uid, created_at);
+
+                        // Launch main activity
+                        Intent intent = new Intent(LoginActivity.this,
+                                NavigationDrawer.class);
                         startActivity(intent);
                         finish();
                     } else {
-                        String error_message = jsonObject.getString("error message");
-                        Toast.makeText(LoginActivity.this, error_message, Toast.LENGTH_SHORT).show();
+                        // Error in login. Get the error message
+                        String errorMsg = jObj.getString("error_msg");
+                        Toast.makeText(getApplicationContext(),
+                                errorMsg, Toast.LENGTH_LONG).show();
                     }
                 } catch (JSONException e) {
+                    // JSON error
                     e.printStackTrace();
-                    Toast.makeText(LoginActivity.this, "Json error " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
-            }
-        }
-                , new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d(TAG,"Login error: " + error.getMessage());
-                Toast.makeText(LoginActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
-                hideDialog();
 
             }
-        }){
-            protected Map<String,String> getParams(){
-                Map<String , String> params = new HashMap<String,String>();
-                params.put("mail",mail);
-                params.put("password",password);
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "Login Error: " + error.getMessage());
+                Toast.makeText(getApplicationContext(),
+                        error.getMessage(), Toast.LENGTH_LONG).show();
+                hideDialog();
+            }
+        }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                // Posting parameters to login url
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("email", email);
+                params.put("password", password);
 
                 return params;
             }
 
-
         };
 
-        AppController.getInstance().addToRequestQueue(stringRequest,TAG_string_request);
+
+
+
+
+        AppController.getInstance().addToRequestQueue(strReq,tag_string_req);
 
     }
-
+    public void language(View view){
+        switch(view.getId()){
+            case R.id.ukranianLangBtn:
+                username.setHint(R.string.enter_email_ukr);
+                password.setHint(R.string.enter_password_ukr);
+                forgotPassView.setText(R.string.forgot_password_ukr);
+                passView.setText(R.string.password_view_ukr);
+                login.setText(R.string.login_button_text_ukr);
+                signup.setText(R.string.join_button_text_ukr);
+                break;
+            case R.id.russianLangBtn:
+                username.setHint(R.string.enter_email_ru);
+                password.setHint(R.string.enter_password_ru);
+                forgotPassView.setText(R.string.forgot_password_ru);
+                passView.setText(R.string.password_view_ru);
+                login.setText(R.string.login_button_text_ru);
+                signup.setText(R.string.join_button_text_ru);
+                break;
+            case R.id.englishLangBtn:
+                username.setHint(R.string.enter_email);
+                password.setHint(R.string.enter_password);
+                forgotPassView.setText(R.string.forgot_password);
+                passView.setText(R.string.password_view);
+                login.setText(R.string.login_button_text);
+                signup.setText(R.string.join_button_text);
+                break;
+        }
+    }
     private void showDialog(){
         if(!progressDialog.isShowing())
             progressDialog.show();
