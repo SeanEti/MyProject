@@ -35,7 +35,8 @@
         <activity android:name=".ForgotPasswordActivity" />
         <activity android:name=".NavigationDrawer" />
         <activity android:name=".activities.AccountActivity" />
-        <activity android:name=".activities.TopUpActivity"></activity>
+        <activity android:name=".activities.TopUpActivity" />
+        <activity android:name=".activities.HistoryActivity"></activity>
     </application>
 
 </manifest>

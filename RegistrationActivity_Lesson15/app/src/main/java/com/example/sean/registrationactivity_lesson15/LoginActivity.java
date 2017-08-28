@@ -38,6 +38,7 @@ public class LoginActivity extends Activity {
     SessionManager sessionManager;
     HashMap<String,String> user;
     ProgressDialog progressDialog;
+    String getDetailsUrl;
     TextView emailView,passView,forgotPassView;
 
     @Override
@@ -52,6 +53,7 @@ public class LoginActivity extends Activity {
         forgotPassView = (TextView) findViewById(R.id.forgotPass);
         emailView = (TextView) findViewById(R.id.mailView);
         passView = (TextView) findViewById(R.id.passView);
+        //getDetailsUrl = AppConfig.URL_GET_DETAILS;
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
@@ -60,7 +62,7 @@ public class LoginActivity extends Activity {
         sessionManager = new SessionManager(getApplicationContext());
 
         if(sessionManager.IsLoggedIn()){
-            Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+            Intent intent = new Intent(LoginActivity.this,NavigationDrawer.class);
             startActivity(intent);
             finish();
         }
@@ -182,9 +184,6 @@ public class LoginActivity extends Activity {
         };
 
 
-
-
-
         AppController.getInstance().addToRequestQueue(strReq,tag_string_req);
 
     }
@@ -222,7 +221,6 @@ public class LoginActivity extends Activity {
     }
 
     private void hideDialog(){
-        if (!progressDialog.isShowing())
-            progressDialog.dismiss();
+        progressDialog.dismiss();
     }
 }

@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import com.example.sean.registrationactivity_lesson15.Helper.SQLiteHandler;
 import com.example.sean.registrationactivity_lesson15.Helper.SessionManager;
 import com.example.sean.registrationactivity_lesson15.activities.AccountActivity;
+import com.example.sean.registrationactivity_lesson15.activities.HistoryActivity;
 import com.example.sean.registrationactivity_lesson15.activities.TopUpActivity;
 
 public class NavigationDrawer extends AppCompatActivity {
@@ -69,6 +70,15 @@ public class NavigationDrawer extends AppCompatActivity {
                         startActivity(intent);
                         finish();
                         break;
+                    case R.id.history_item:
+                        fragment = getSupportFragmentManager().beginTransaction();
+                        fragment.replace(R.id.frame,new HistoryActivity());
+                        fragment.commit();
+                        getSupportActionBar().setTitle("History");
+                        item.setChecked(true);
+                        drawer.closeDrawers();
+                        break;
+
                 }
                 return false;
             }
