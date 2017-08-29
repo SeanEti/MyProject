@@ -10,4 +10,25 @@
     <string name="restore">Restore</string>
     <string name="drawer_open">drawer open</string>
     <string name="drawer_close">drawer close</string>
+
+    <string name="payment">All types</string>
+    <string-array name="paymentSpinnerItems">
+        <item>All types</item>
+        <item>Credit Card</item>
+        <item>Bank Transfer</item>
+        <item>CashU</item>
+        <item>Vmc To Umc Payment</item>
+    </string-array>
+
+
+    <string name="transaction">All transaction</string>
+    <string-array name="transactionSpinnerItems">
+        <item>All transactions</item>
+        <item>Accepted</item>
+        <item>Rejected</item>
+        <item>Pending</item>
+    </string-array>
+
+    <string name="edit"><u>Edit</u></string>
+    <string name="closeAcc"><u>Close account</u></string>
 </resources>

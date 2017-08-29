@@ -322,7 +322,7 @@
             <Button
                 android:id="@+id/yourDocBtn"
                 android:textColor="#526E9C"
-                android:background="#EEEFF0"
+                android:background="#F2F6F9"
                 android:text="Your Documents"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -4,13 +4,9 @@
     android:layout_height="match_parent">
     <DatePicker
         android:id="@+id/calendar"
-        android:spinnersShown="false"
+        android:datePickerMode="spinner"
+        android:calendarViewShown="false"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"></DatePicker>
-    <Button
-        android:id="@+id/dateSaveBtn"
-        android:text="save"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 
 </LinearLayout>

@@ -1,5 +1,6 @@
 package com.example.sean.registrationactivity_lesson15.activities;
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.support.annotation.Nullable;
@@ -17,10 +18,12 @@ import android.widget.TextView;
 
 import com.example.sean.registrationactivity_lesson15.R;
 
+import java.util.Calendar;
+
 public class HistoryActivity extends Fragment {
 
-    TextView fromDate;
-    DatePicker calendar;
+    TextView fromDate,toDate;
+    Button clear,apply;
 
     @Nullable
     @Override
@@ -28,34 +31,61 @@ public class HistoryActivity extends Fragment {
 
         View view = inflater.inflate(R.layout.activity_history, container, false);
         fromDate = (TextView) view.findViewById(R.id.fromDateView);
-        calendar = (DatePicker) view.findViewById(R.id.calendar);
+        toDate = (TextView) view.findViewById(R.id.toDateView);
+        clear = (Button) view.findViewById(R.id.clearTopUpBtn);
+        apply = (Button) view.findViewById(R.id.applyTopUpBtn);
 
+        clear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fromDate.setText("");
+                toDate.setText("");
+            }
+        });
+
+        toDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar mcurrentDate = Calendar.getInstance();
+                final int mYear = mcurrentDate.get(Calendar.YEAR);
+                final int mMonth = mcurrentDate.get(Calendar.MONTH);
+                final int mDay = mcurrentDate.get(Calendar.DAY_OF_MONTH);
+
+
+                DatePickerDialog mDatePicker = new DatePickerDialog(getActivity(), R.style.MyDialogTheme,
+                        new DatePickerDialog.OnDateSetListener() {
+                            public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
+
+                                toDate.setText(selectedday + "/" + selectedmonth + "/" + selectedyear);
+
+                            }
+                        }, mYear, mMonth, mDay);
+                //mDatePicker.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+                mDatePicker.setTitle("Pick a date");
+                mDatePicker.show();
+            }
+        });
 
         fromDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LayoutInflater factory = LayoutInflater.from(getActivity());
-                final View textEntryView = factory.inflate(R.layout.calendar_view, null);
-                final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-                alert.setTitle("Pick a date")
-                        .setView(textEntryView)
-                        .setPositiveButton("save",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int whichButton) {
-                                        int day = calendar.getDayOfMonth()
-                                                ,month = calendar.getMonth()
-                                                ,year = calendar.getYear();
-                                        fromDate.setText(day+"/"+month+"/"+year);
-                                    }
-                                })
-                        .setNegativeButton("Cancel",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog,
-                                                        int whichButton) {
-                                    }
-                                });
-                alert.show();
-                //openDialog();
+                Calendar mcurrentDate = Calendar.getInstance();
+                final int mYear = mcurrentDate.get(Calendar.YEAR);
+                final int mMonth = mcurrentDate.get(Calendar.MONTH);
+                final int mDay = mcurrentDate.get(Calendar.DAY_OF_MONTH);
+
+
+                DatePickerDialog mDatePicker = new DatePickerDialog(getActivity(), R.style.MyDialogTheme,
+                        new DatePickerDialog.OnDateSetListener() {
+                            public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
+
+                                fromDate.setText(selectedday + "/" + selectedmonth + "/" + selectedyear);
+
+                            }
+                        }, mYear, mMonth, mDay);
+                //mDatePicker.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+                mDatePicker.setTitle("Pick a date");
+                mDatePicker.show();
             }
         });
 

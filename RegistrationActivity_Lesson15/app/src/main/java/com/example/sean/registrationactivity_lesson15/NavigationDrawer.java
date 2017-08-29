@@ -16,6 +16,7 @@ import com.example.sean.registrationactivity_lesson15.Helper.SQLiteHandler;
 import com.example.sean.registrationactivity_lesson15.Helper.SessionManager;
 import com.example.sean.registrationactivity_lesson15.activities.AccountActivity;
 import com.example.sean.registrationactivity_lesson15.activities.HistoryActivity;
+import com.example.sean.registrationactivity_lesson15.activities.SettingsActivity;
 import com.example.sean.registrationactivity_lesson15.activities.TopUpActivity;
 
 public class NavigationDrawer extends AppCompatActivity {
@@ -75,6 +76,14 @@ public class NavigationDrawer extends AppCompatActivity {
                         fragment.replace(R.id.frame,new HistoryActivity());
                         fragment.commit();
                         getSupportActionBar().setTitle("History");
+                        item.setChecked(true);
+                        drawer.closeDrawers();
+                        break;
+                    case R.id.settings_item:
+                        fragment = getSupportFragmentManager().beginTransaction();
+                        fragment.replace(R.id.frame,new SettingsActivity());
+                        fragment.commit();
+                        getSupportActionBar().setTitle("Settings");
                         item.setChecked(true);
                         drawer.closeDrawers();
                         break;
