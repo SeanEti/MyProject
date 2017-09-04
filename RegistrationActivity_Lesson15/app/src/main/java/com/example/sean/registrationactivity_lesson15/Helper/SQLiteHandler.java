@@ -168,11 +168,32 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     private static final String TABLE_USER = "user";
 
     // Login Table Columns names
-    private static final String KEY_ID = "id";
-    private static final String KEY_NAME = "name";
-    private static final String KEY_EMAIL = "email";
-    private static final String KEY_UID = "uid";
-    private static final String KEY_CREATED_AT = "created_at";
+    //private static final String KEY_ID = "id";
+    //private static final String KEY_NAME = "name";
+    private static final String KEY_EMAIL = "login";
+    private static final String KEY_UID = "password";
+    private static final String KEY_TOKEN = "Token";
+    //private static final String KEY_CREATED_AT = "created_at";
+
+    // Details table name
+    private static final String TABLE_DETAIL = "detail";
+    // Details table columns
+    private static final String STATUS = "Status";
+    private static final String FIRST_NAME = "FirstName";
+    private static final String LAST_NAME = "LastName";
+    private static final String EMAIL = "Email";
+    private static final String COUNTRY= "Country";
+    private static final String COUNTRYALPHA2= "CountryAlpha2";
+    private static final String CITY= "City";
+    private static final String ZIP = "Zip";
+    private static final String ADDRESS = "Address";
+    private static final String USERACCSTATUS = "UserAccStatus";
+    private static final String SKYPENAME = "SkypeName";
+    private static final String COUNTRY_NAME = "CountryName";
+    private static final String PHONE_CODE = "PhoneCode";
+    private static final String PHONE = "Phone";
+    private static final String DEVICEID = "DeviceIdentificator";
+
 
     public SQLiteHandler(Context context) {
         super (context,DATABASE_NAME,null,DATABASE_VERSION);
@@ -182,10 +203,15 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_LOGIN_TABLE = "CREATE TABLE " + TABLE_USER + "("
-                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT,"
-                + KEY_EMAIL + " TEXT UNIQUE," + KEY_UID + " TEXT,"
-                + KEY_CREATED_AT + " TEXT" + ")";
+                + KEY_EMAIL + " TEXT UNIQUE," + KEY_UID + " TEXT," + KEY_TOKEN + " TEXT," + ")";
         db.execSQL(CREATE_LOGIN_TABLE);
+
+        String CREATE_DETAILS_TABLE = "CREATE TABLE " + TABLE_DETAIL + "(" + STATUS + " TEXT," +
+                FIRST_NAME + " TEXT," + LAST_NAME + " TEXT," + EMAIL + " TEXT UNIQUE," + COUNTRY
+                + " TEXT," + COUNTRYALPHA2 + " TEXT," + CITY + " TEXT," + ZIP + " TEXT," + ADDRESS
+                + " TEXT," + USERACCSTATUS + " TEXT," + SKYPENAME + " TEXT," + COUNTRY_NAME + " TEXT," +
+                PHONE_CODE + " TEXT," + PHONE + " TEXT," + DEVICEID + " TEXT," +")";
+        db.execSQL(CREATE_DETAILS_TABLE);
 
         Log.d(TAG, "Database tables created");
     }
@@ -203,14 +229,15 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     /**
      * Storing user details in database
      * */
-    public void addUser(String name, String email, String uid, String created_at) {
+    public void addUser(String email, String uid, String token) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(KEY_NAME, name); // Name
+        //values.put(KEY_NAME, name); // Name
         values.put(KEY_EMAIL, email); // Email
         values.put(KEY_UID, uid); // Email
-        values.put(KEY_CREATED_AT, created_at); // Created At
+        values.put(KEY_TOKEN,token); // Token
+        //values.put(KEY_CREATED_AT, created_at); // Created At
 
         // Inserting Row
         long id = db.insert(TABLE_USER, null, values);
@@ -219,22 +246,61 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         Log.d(TAG, "New user inserted into sqlite: " + id);
     }
 
+    public void addDetails(String status,String firstName,String lastName,String email
+            ,String country,String countryAlpha2,String city,String zip,String address,String userAccStatus
+    ,String skypename,String phonecode,String phone,String countryname,String deviceid){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(STATUS,status);
+        contentValues.put(FIRST_NAME,firstName);
+        contentValues.put(LAST_NAME,lastName);
+        contentValues.put(EMAIL,email);
+        contentValues.put(COUNTRY,country);
+        contentValues.put(COUNTRYALPHA2,countryAlpha2);
+        contentValues.put(CITY,city);
+        contentValues.put(ZIP,zip);
+        contentValues.put(ADDRESS,address);
+        contentValues.put(USERACCSTATUS,userAccStatus);
+        contentValues.put(SKYPENAME,skypename);
+        contentValues.put(PHONE_CODE,phonecode);
+        contentValues.put(PHONE,phone);
+        contentValues.put(COUNTRY_NAME,countryname);
+        contentValues.put(DEVICEID,deviceid);
+
+        long id = db.insert(TABLE_DETAIL,null,contentValues);
+        db.close();
+
+        Log.d(TAG,"User Details added into sqlite: " + id);
+    }
+
     /**
      * Getting user data from database
      * */
     public HashMap<String, String> getUserDetails() {
         HashMap<String, String> user = new HashMap<String, String>();
-        String selectQuery = "SELECT  * FROM " + TABLE_USER;
+        String selectQuery = "SELECT  * FROM " + TABLE_DETAIL;
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         // Move to first row
         cursor.moveToFirst();
         if (cursor.getCount() > 0) {
-            user.put("name", cursor.getString(1));
-            user.put("email", cursor.getString(2));
-            user.put("uid", cursor.getString(3));
-            user.put("created_at", cursor.getString(4));
+            user.put("Status", cursor.getString(1));
+            user.put("FirstName", cursor.getString(3));
+            user.put("LastName", cursor.getString(4));
+            user.put("Email", cursor.getString(5));
+            user.put("Country", cursor.getString(6));
+            user.put("CountryAlpha2", cursor.getString(7));
+            user.put("City", cursor.getString(8));
+            user.put("Zip", cursor.getString(9));
+            user.put("Address", cursor.getString(10));
+            user.put("UserAccStatus", cursor.getString(11));
+            user.put("SkypeName",cursor.getString(16));
+            user.put("CountryName",cursor.getString(17));
+            user.put("PhoneCode",cursor.getString(18));
+            user.put("Phone",cursor.getString(19));
+            user.put("DeviceIdentificator",cursor.getString(21));
         }
         cursor.close();
         db.close();

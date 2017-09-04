@@ -2,6 +2,7 @@ package com.example.sean.registrationactivity_lesson15;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -26,8 +27,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Method;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.net.ssl.SSLContext;
 
 public class LoginActivity extends Activity {
     private static final String TAG = RegisterActivity.class.getSimpleName();
@@ -53,7 +57,7 @@ public class LoginActivity extends Activity {
         forgotPassView = (TextView) findViewById(R.id.forgotPass);
         emailView = (TextView) findViewById(R.id.mailView);
         passView = (TextView) findViewById(R.id.passView);
-        //getDetailsUrl = AppConfig.URL_GET_DETAILS;
+        getDetailsUrl = AppConfig.URL_GET_DETAILS;
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
@@ -84,6 +88,11 @@ public class LoginActivity extends Activity {
                 if(username1.isEmpty()||passoword1.isEmpty()) {
                     Toast.makeText(LoginActivity.this, "Username or password are missing", Toast.LENGTH_SHORT).show();
                 }else {
+                    Intent intent = new Intent(LoginActivity.this,
+                            NavigationDrawer.class);
+                    //intent.putExtra("tokenUrl",getDetailsUrl);
+                    startActivity(intent);
+                    finish();
                     checkLogin(username1, passoword1);
                 }
             }
@@ -113,10 +122,9 @@ public class LoginActivity extends Activity {
 
         progressDialog.setMessage("Logging in ...");
         showDialog();
-
+        Log.i("TEST", "hello");
         StringRequest strReq = new StringRequest(Request.Method.POST,
                 AppConfig.URL_LOGIN, new Response.Listener<String>() {
-
             @Override
             public void onResponse(String response) {
                 Log.d(TAG, "Login Response: " + response.toString());
@@ -133,18 +141,14 @@ public class LoginActivity extends Activity {
                         sessionManager.SetLogin(true);
 
                         // Now store the user in SQLite
-                        String uid = jObj.getString("uid");
-                        JSONObject user = jObj.getJSONObject("user");
-                        String name = user.getString("name");
-                        String email = user.getString("email");
-                        String created_at = user.getString("created_at");
-
-                        // Inserting row in users table
-                        sqLiteHandler.addUser(name, email, uid, created_at);
+                        String token = jObj.getString("Token");
+                        getDetailsUrl = getDetailsUrl+token;
+                        sqLiteHandler.addUser(email,password,token);
 
                         // Launch main activity
                         Intent intent = new Intent(LoginActivity.this,
                                 NavigationDrawer.class);
+                        //intent.putExtra("tokenUrl",getDetailsUrl);
                         startActivity(intent);
                         finish();
                     } else {
@@ -175,18 +179,23 @@ public class LoginActivity extends Activity {
             protected Map<String, String> getParams() {
                 // Posting parameters to login url
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("email", email);
+                params.put("login", email);
                 params.put("password", password);
+                params.put("DeviceIdentificator","123412348");
 
                 return params;
             }
 
         };
 
-
-        AppController.getInstance().addToRequestQueue(strReq,tag_string_req);
+        try {
+            AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
+        }catch(Exception ex) {
+            ex.printStackTrace();
+        }
 
     }
+
     public void language(View view){
         switch(view.getId()){
             case R.id.ukranianLangBtn:

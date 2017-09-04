@@ -37,7 +37,8 @@
         <activity android:name=".activities.AccountActivity" />
         <activity android:name=".activities.TopUpActivity" />
         <activity android:name=".activities.HistoryActivity" />
-        <activity android:name=".activities.SettingsActivity"></activity>
+        <activity android:name=".activities.SettingsActivity" />
+        <activity android:name=".PersonalInfoEdit"></activity>
     </application>
 
 </manifest>

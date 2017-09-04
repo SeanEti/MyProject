@@ -3,6 +3,7 @@ package com.example.sean.registrationactivity_lesson15;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.nfc.Tag;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,11 +26,13 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = RegisterActivity.class.getSimpleName();
     Button register,backToLogin;
-    EditText password,username,email;
+    EditText password,confirmpass,email;
     ProgressDialog progressDialog;
     SQLiteHandler db;
     SessionManager sessionManager;
@@ -40,8 +43,9 @@ public class RegisterActivity extends AppCompatActivity {
         register = (Button) findViewById(R.id.registerButton);
         backToLogin = (Button) findViewById(R.id.returnToLoginButton);
         password = (EditText) findViewById(R.id.registerPassword);
-        username = (EditText) findViewById(R.id.registerUsername);
+        confirmpass = (EditText) findViewById(R.id.registerConfirmPass);
         email = (EditText) findViewById(R.id.registerMail);
+        //-----------------------------------------------------
         sessionManager = new SessionManager(getApplicationContext());
         db = new SQLiteHandler(getApplicationContext());
         progressDialog = new ProgressDialog(this);
@@ -55,13 +59,40 @@ public class RegisterActivity extends AppCompatActivity {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name = username.getText().toString().trim()
+                String name = confirmpass.getText().toString().trim()
                         ,mail = email.getText().toString().trim()
                         ,pass = password.getText().toString().trim();
-                if(!name.isEmpty()&&!mail.isEmpty()&&!pass.isEmpty()){
-                    registerUser(name,mail,pass);
-                }else{
-                    Toast.makeText(RegisterActivity.this, "Please don't leave blank areas", Toast.LENGTH_SHORT).show();
+                if (!(!name.isEmpty() || !mail.isEmpty() || !pass.isEmpty())) {
+                    Toast.makeText(getApplicationContext(),
+                            "Please enter your details!", Toast.LENGTH_LONG)
+                            .show();
+                }else if (!(validateEmail(mail))) {
+                    email.setText("");
+                    Toast.makeText(getApplicationContext(),
+                            "Please enter a valid email", Toast.LENGTH_LONG)
+                            .show();
+                }else if(!(pass.equals(confirmpass))) {
+                    password.setText("");
+                    confirmpass.setText("");
+                    Toast.makeText(getApplicationContext(),
+                            "Password is incorrect! ReEnter the password.", Toast.LENGTH_LONG)
+                            .show();
+                }else {
+
+                    // registerUser(name, mail, pass);
+                    Toast.makeText(getApplicationContext(),
+                            "Registration was successfull! Please check your email.", Toast.LENGTH_LONG)
+                            .show();
+
+                    AlertDialog.Builder register = new AlertDialog.Builder(getApplicationContext());
+
+                    View dialogView = View.inflate(getApplicationContext(),R.layout.activity_register_part_two,null);
+                    register.setView(dialogView);
+
+
+                    //Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                    //startActivity(intent);
+                    //finish();
                 }
             }
         });
@@ -79,7 +110,8 @@ public class RegisterActivity extends AppCompatActivity {
         final String TAG_string_req = "registration_req";
         progressDialog.setMessage("Registering...");
         showDialog();
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, AppConfig.URL_REGISTER, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST
+                , AppConfig.URL_REGISTER, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.d(TAG, "register response: " + response.toString());
@@ -89,8 +121,8 @@ public class RegisterActivity extends AppCompatActivity {
                     boolean error = jsonObject.getBoolean("error");
                     if (!error) {
                         JSONObject newUser = new JSONObject("user");
-                        String name = newUser.getString("name"), mail = newUser.getString("mail"), password = newUser.getString("password"), created_time = newUser.getString("ct");
-                        db.addUser(name, password, mail, created_time);
+                        String token = newUser.getString("Token"), mail = newUser.getString("login"), password = newUser.getString("password");
+                        db.addUser(password, mail, token);
                         Toast.makeText(RegisterActivity.this, "User successfully registered", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                         startActivity(intent);
@@ -116,9 +148,9 @@ public class RegisterActivity extends AppCompatActivity {
         ){
             protected Map<String,String> getParams(){
                 Map<String,String> params = new HashMap<String,String>();
-                params.put("name",name);
-                params.put("email",mail);
+                params.put("login",name);
                 params.put("password",password);
+                params.put("DeviceIdenficator","12341248");
                 return params;
 
             }
@@ -134,5 +166,22 @@ public class RegisterActivity extends AppCompatActivity {
     private void hideDialog(){
         if(progressDialog.isShowing())
             progressDialog.dismiss();
+    }
+
+    //      ---     Checking email correctness
+
+    public boolean validateEmail(String email) {
+        boolean isValid = false;
+
+        String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
+        CharSequence inputStr = email;
+
+        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(inputStr);
+        if (matcher.matches()) {
+            isValid = true;
+        }
+        return isValid;
+
     }
 }

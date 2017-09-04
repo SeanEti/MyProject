@@ -12,22 +12,25 @@
     <EditText
         android:background="@drawable/borders"
         android:layout_marginBottom="5dp"
-        android:id="@+id/registerUsername"
-        android:hint="Username"
+        android:id="@+id/registerMail"
+        android:typeface="monospace"
+        android:hint="Enter your email"
         android:layout_width="300dp"
         android:layout_height="wrap_content" />
     <EditText
+        android:typeface="monospace"
         android:layout_marginBottom="5dp"
         android:background="@drawable/borders"
         android:id="@+id/registerPassword"
-        android:hint="Pasword"
+        android:hint="Enter your password"
         android:layout_width="300dp"
         android:layout_height="wrap_content" />
     <EditText
         android:layout_marginBottom="10dp"
         android:background="@drawable/borders"
-        android:id="@+id/registerMail"
-        android:hint="Mail"
+        android:id="@+id/registerConfirmPass"
+        android:typeface="monospace"
+        android:hint="Confirm Password"
         android:layout_width="300dp"
         android:layout_height="wrap_content" />
     <Button

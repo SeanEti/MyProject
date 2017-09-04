@@ -10,8 +10,13 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.toolbox.StringRequest;
 import com.example.sean.registrationactivity_lesson15.Helper.SQLiteHandler;
 import com.example.sean.registrationactivity_lesson15.Helper.SessionManager;
 import com.example.sean.registrationactivity_lesson15.activities.AccountActivity;
@@ -19,7 +24,11 @@ import com.example.sean.registrationactivity_lesson15.activities.HistoryActivity
 import com.example.sean.registrationactivity_lesson15.activities.SettingsActivity;
 import com.example.sean.registrationactivity_lesson15.activities.TopUpActivity;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class NavigationDrawer extends AppCompatActivity {
+    private static final String TAG = NavigationDrawer.class.getSimpleName();
     ActionBarDrawerToggle actionBarDrawerToggle;
     FragmentTransaction fragment;
     Toolbar toolbar;
@@ -39,6 +48,11 @@ public class NavigationDrawer extends AppCompatActivity {
         fragment = getSupportFragmentManager().beginTransaction();
         fragment.add(R.id.frame,new AccountActivity());
         fragment.commit();
+
+        String url = getIntent().getStringExtra("tokenUrl");
+
+
+
         getSupportActionBar().setTitle("Account");
 
         drawer = (DrawerLayout) findViewById(R.id.drawerLayout);
