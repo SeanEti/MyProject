@@ -13,13 +13,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.sean.registrationactivity_lesson15.Helper.SQLiteHandler;
 import com.example.sean.registrationactivity_lesson15.R;
 
 public class SettingsActivity extends Fragment {
     TextView editPD,editPass;
     String addres="",skyp="",phon="",pass="",confirmpass="";
-    TextView address,phoneNum,skypeAcc,PasswordView;
-    EditText editpass,confirmPass;
+    TextView address,phoneNum,skypeAcc,PasswordView,accStatusView,emailView;
+    EditText editpass,confirmPass,oldpass;
+    SQLiteHandler sqLiteHandler;
     EditText editAddress,editPhone,editSkype;
     @Nullable
     @Override
@@ -31,10 +33,18 @@ public class SettingsActivity extends Fragment {
         phoneNum = (TextView) view.findViewById(R.id.phoneView);
         skypeAcc = (TextView) view.findViewById(R.id.skypeView);
         PasswordView = (TextView) view.findViewById(R.id.PasswordView);
+        accStatusView = (TextView) view.findViewById(R.id.accStatusView);
+        emailView = (TextView) view.findViewById(R.id.emailView);
 
-        address.setText("address");
-        phoneNum.setText("555-555");
-        skypeAcc.setText("B0ss420");
+        sqLiteHandler = new SQLiteHandler(getActivity());
+
+        address.setText(sqLiteHandler.getUserDetails().get("Address"));
+        phoneNum.setText(sqLiteHandler.getUserDetails().get("Phone"));
+        skypeAcc.setText(sqLiteHandler.getUserDetails().get("SkypeName"));
+        accStatusView.setText(sqLiteHandler.getUserDetails().get("UserAccStatus"));
+        PasswordView.setText(sqLiteHandler.getUser().get("password"));
+        emailView.setText(sqLiteHandler.getUser().get("login"));
+
 
         editPD.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,6 +108,7 @@ public class SettingsActivity extends Fragment {
             public void onClick(DialogInterface dialog, int whichButton) {
                 //do something with edt.getText().toString();
                 editpass = (EditText) dialogView.findViewById(R.id.insertNpass);
+                oldpass = (EditText) dialogView.findViewById(R.id.insertCpass);
                 confirmPass = (EditText) dialogView.findViewById(R.id.confirmpass);
 
                 pass = editpass.getText().toString();
@@ -105,10 +116,10 @@ public class SettingsActivity extends Fragment {
                 if (pass.isEmpty()||confirmpass.isEmpty())
                     Toast.makeText(getActivity(), "Password hasn't changed, Please don't leave blank fields", Toast.LENGTH_SHORT).show();
                 else {
-                    if (pass.equals(confirmpass)) {
+                    if (pass.equals(confirmpass)&&oldpass.getText().toString().equals(sqLiteHandler.getUser().get("password"))) {
                         PasswordView.setText(pass);
                     } else {
-                        Toast.makeText(getActivity(), "New password and confrim password are not the same!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "One of the passwords is incorrect!", Toast.LENGTH_SHORT).show();
                     }
                 }
             }

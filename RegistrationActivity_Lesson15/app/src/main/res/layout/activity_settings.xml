@@ -41,7 +41,7 @@
 
                     <TextView
                         android:text="Address"
-                        android:textColor="#6D737B"
+                        android:textColor="#000000"
                         android:textSize="20sp"
                         android:layout_width="150dp"
                         android:layout_height="wrap_content" />
@@ -64,7 +64,7 @@
 
                     <TextView
                         android:text="Phone number"
-                        android:textColor="#6D737B"
+                        android:textColor="#000000"
                         android:textSize="20sp"
                         android:layout_width="150dp"
                         android:layout_height="wrap_content" />
@@ -87,7 +87,7 @@
 
                     <TextView
                         android:text="Skype username"
-                        android:textColor="#6D737B"
+                        android:textColor="#000000"
                         android:textSize="20sp"
                         android:layout_width="150dp"
                         android:layout_height="wrap_content" />
@@ -110,7 +110,7 @@
 
                     <TextView
                         android:text="Account status"
-                        android:textColor="#6D737B"
+                        android:textColor="#000000"
                         android:textSize="20sp"
                         android:layout_width="150dp"
                         android:layout_height="wrap_content" />
@@ -176,6 +176,7 @@
                     android:layout_height="wrap_content">
 
                     <TextView
+                        android:textColor="#000000"
                         android:textSize="20sp"
                         android:text="Password"
                         android:layout_width="150dp"
@@ -222,18 +223,21 @@
 
 
                 <TextView
+                    android:textColor="#000000"
                     android:background="#ffffff"
                     android:textSize="20sp"
                     android:text="Email Address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
                 <TextView
+                    android:id="@+id/emailView"
                     android:background="#ffffff"
                     android:textColor="#000000"
                     android:textSize="20sp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
                 <TextView
+                    android:textColor="#000000"
                     android:background="#ffffff"
                     android:textSize="20sp"
                     android:text="Status"

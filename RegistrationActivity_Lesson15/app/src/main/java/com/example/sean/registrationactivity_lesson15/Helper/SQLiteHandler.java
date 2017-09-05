@@ -190,7 +190,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     private static final String USERACCSTATUS = "UserAccStatus";
     private static final String SKYPENAME = "SkypeName";
     private static final String COUNTRY_NAME = "CountryName";
-    private static final String PHONE_CODE = "PhoneCode";
+    private static final String PHONE_CODE = "Phonecode";
     private static final String PHONE = "Phone";
     private static final String DEVICEID = "DeviceIdentificator";
 
@@ -203,14 +203,14 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_LOGIN_TABLE = "CREATE TABLE " + TABLE_USER + "("
-                + KEY_EMAIL + " TEXT UNIQUE," + KEY_UID + " TEXT," + KEY_TOKEN + " TEXT," + ")";
+                + KEY_EMAIL + " TEXT," + KEY_UID + " TEXT," + KEY_TOKEN + " TEXT" + ")";
         db.execSQL(CREATE_LOGIN_TABLE);
 
         String CREATE_DETAILS_TABLE = "CREATE TABLE " + TABLE_DETAIL + "(" + STATUS + " TEXT," +
-                FIRST_NAME + " TEXT," + LAST_NAME + " TEXT," + EMAIL + " TEXT UNIQUE," + COUNTRY
+                FIRST_NAME + " TEXT," + LAST_NAME + " TEXT," + EMAIL + " TEXT," + COUNTRY
                 + " TEXT," + COUNTRYALPHA2 + " TEXT," + CITY + " TEXT," + ZIP + " TEXT," + ADDRESS
                 + " TEXT," + USERACCSTATUS + " TEXT," + SKYPENAME + " TEXT," + COUNTRY_NAME + " TEXT," +
-                PHONE_CODE + " TEXT," + PHONE + " TEXT," + DEVICEID + " TEXT," +")";
+                PHONE_CODE + " TEXT," + PHONE + " TEXT," + DEVICEID + " TEXT" + ")";
         db.execSQL(CREATE_DETAILS_TABLE);
 
         Log.d(TAG, "Database tables created");
@@ -285,27 +285,42 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(selectQuery, null);
         // Move to first row
         cursor.moveToFirst();
-        if (cursor.getCount() > 0) {
-            user.put("Status", cursor.getString(1));
-            user.put("FirstName", cursor.getString(3));
-            user.put("LastName", cursor.getString(4));
-            user.put("Email", cursor.getString(5));
-            user.put("Country", cursor.getString(6));
-            user.put("CountryAlpha2", cursor.getString(7));
-            user.put("City", cursor.getString(8));
-            user.put("Zip", cursor.getString(9));
-            user.put("Address", cursor.getString(10));
-            user.put("UserAccStatus", cursor.getString(11));
-            user.put("SkypeName",cursor.getString(16));
-            user.put("CountryName",cursor.getString(17));
-            user.put("PhoneCode",cursor.getString(18));
-            user.put("Phone",cursor.getString(19));
-            user.put("DeviceIdentificator",cursor.getString(21));
-        }
+            user.put("Status", cursor.getString(0));
+            user.put("FirstName", cursor.getString(1));
+            user.put("LastName", cursor.getString(2));
+            user.put("Email", cursor.getString(3));
+            user.put("Country", cursor.getString(4));
+            user.put("CountryAlpha2", cursor.getString(5));
+            user.put("City", cursor.getString(6));
+            user.put("Zip", cursor.getString(7));
+            user.put("Address", cursor.getString(8));
+            user.put("UserAccStatus", cursor.getString(9));
+            user.put("SkypeName",cursor.getString(10));
+            user.put("CountryName",cursor.getString(11));
+            user.put("Phonecode",cursor.getString(12));
+            user.put("Phone",cursor.getString(13));
+            user.put("DeviceIdentificator",cursor.getString(14));
         cursor.close();
         db.close();
         // return user
         Log.d(TAG, "Fetching user from Sqlite: " + user.toString());
+
+        return user;
+    }
+
+    public HashMap<String,String> getUser() {
+        HashMap<String, String> user = new HashMap<String,String>();
+        String selectQuery = "SELECT * FROM " + TABLE_USER;
+
+        SQLiteDatabase db =  this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery,null);
+        cursor.moveToFirst();
+        user.put("login", cursor.getString(0));
+        user.put("password", cursor.getString(1));
+        user.put("Token", cursor.getString(2));
+        cursor.close();
+        db.close();
+        Log.d(TAG,"Fetching user from sqlite: " + user.toString());
 
         return user;
     }

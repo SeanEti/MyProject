@@ -88,11 +88,11 @@ public class LoginActivity extends Activity {
                 if(username1.isEmpty()||passoword1.isEmpty()) {
                     Toast.makeText(LoginActivity.this, "Username or password are missing", Toast.LENGTH_SHORT).show();
                 }else {
-                    Intent intent = new Intent(LoginActivity.this,
-                            NavigationDrawer.class);
+                    //Intent intent = new Intent(LoginActivity.this,
+                      //      NavigationDrawer.class);
                     //intent.putExtra("tokenUrl",getDetailsUrl);
-                    startActivity(intent);
-                    finish();
+                    //startActivity(intent);
+                    //finish();
                     checkLogin(username1, passoword1);
                 }
             }
@@ -132,18 +132,70 @@ public class LoginActivity extends Activity {
 
                 try {
                     JSONObject jObj = new JSONObject(response);
-                    boolean error = jObj.getBoolean("error");
+                    String token = jObj.getString("Token");
 
                     // Check for error node in json
-                    if (!error) {
+                    if (token!=null) {
                         // user successfully logged in
                         // Create login session
                         sessionManager.SetLogin(true);
 
                         // Now store the user in SQLite
-                        String token = jObj.getString("Token");
-                        getDetailsUrl = getDetailsUrl+token;
+                        String newGetDetailsURL = getDetailsUrl+"/"+token;
                         sqLiteHandler.addUser(email,password,token);
+
+
+                        String tag_details_req = "req_details";
+
+                        StringRequest stringRequest = new StringRequest(Request.Method.GET,
+                                newGetDetailsURL, new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response1) {
+                                Log.d(TAG, "Getting Details Response: " + response1.toString());
+
+                                try {
+                                    JSONObject jasun = new JSONObject(response1);
+
+                                    String status = jasun.getString("Status")
+                                            ,firstName = jasun.getString("FirstName")
+                                            ,lastName =jasun.getString("LastName")
+                                            ,email = jasun.getString("Email")
+                                            ,country = jasun.getString("Country")
+                                            ,countryAlpha2 = jasun.getString("CountryAlpha2")
+                                            ,city = jasun.getString("City")
+                                            ,zip = jasun.getString("Zip")
+                                            ,address = jasun.getString("Address")
+                                            ,userAccStatus  = jasun.getString("UserAccStatus")
+                                            ,skypeName = jasun.getString("SkypeName")
+                                            ,countryName = jasun.getString("CountryName")
+                                            ,phoneCode = jasun.getString("Phonecode")
+                                            ,phone = jasun.getString("Phone")
+                                            ,deviceId = jasun.getString("DeviceIdentificator");
+
+                                    sqLiteHandler.addDetails(status,firstName,lastName,email,country,countryAlpha2
+                                    ,city,zip,address,userAccStatus,skypeName,phoneCode,phone,countryName,deviceId);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                        }, new Response.ErrorListener(){
+
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Log.e(TAG, "Getting Details Error: " + error.getMessage());
+                                Toast.makeText(getApplicationContext(),
+                                        error.getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        });
+
+                        try {
+                            AppController.getInstance().addToRequestQueue(stringRequest);
+                        }catch(Exception ex) {
+                            ex.printStackTrace();
+                        }
+
+
 
                         // Launch main activity
                         Intent intent = new Intent(LoginActivity.this,
@@ -153,9 +205,8 @@ public class LoginActivity extends Activity {
                         finish();
                     } else {
                         // Error in login. Get the error message
-                        String errorMsg = jObj.getString("error_msg");
                         Toast.makeText(getApplicationContext(),
-                                errorMsg, Toast.LENGTH_LONG).show();
+                                "User does not exist", Toast.LENGTH_LONG).show();
                     }
                 } catch (JSONException e) {
                     // JSON error
