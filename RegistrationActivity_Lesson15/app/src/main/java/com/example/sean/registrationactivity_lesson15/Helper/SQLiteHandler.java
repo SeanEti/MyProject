@@ -159,7 +159,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 
     // All Static variables
     // Database Version
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 3;
 
     // Database Name
     private static final String DATABASE_NAME = "android_api";
@@ -194,6 +194,20 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     private static final String PHONE = "Phone";
     private static final String DEVICEID = "DeviceIdentificator";
 
+    //Cards table name
+    private static final String TABLE_CARD = "Cards";
+    //Cards table columns
+    private static final String CARDID = "CardId";
+    private static final String CARD_BALANCE = "Balance";
+    private static final String CARD_MASK = "CardMask";
+    private static final String BANK_ACCOUNT = "BankAccount";
+    private static final String CARD_CURRENCY = "Currency";
+    private static final String CARD_TYPE = "CardType";
+    private static final String CARD_STATUS = "Status";
+    private static final String EXPIRATION_MONTH = "ExpirationMonth";
+    private static final String EXPIRATION_YEAR = "ExpirationYear";
+    private static final String CARD_ACCOUNT_ID = "WalletProviderCardAccountId";
+
 
     public SQLiteHandler(Context context) {
         super (context,DATABASE_NAME,null,DATABASE_VERSION);
@@ -206,12 +220,24 @@ public class SQLiteHandler extends SQLiteOpenHelper {
                 + KEY_EMAIL + " TEXT," + KEY_UID + " TEXT," + KEY_TOKEN + " TEXT" + ")";
         db.execSQL(CREATE_LOGIN_TABLE);
 
-        String CREATE_DETAILS_TABLE = "CREATE TABLE " + TABLE_DETAIL + "(" + STATUS + " TEXT," +
-                FIRST_NAME + " TEXT," + LAST_NAME + " TEXT," + EMAIL + " TEXT," + COUNTRY
+        String CREATE_DETAILS_TABLE = "CREATE TABLE " + TABLE_DETAIL + "("
+                + STATUS + " TEXT," + FIRST_NAME + " TEXT," + LAST_NAME + " TEXT," + EMAIL + " TEXT," + COUNTRY
                 + " TEXT," + COUNTRYALPHA2 + " TEXT," + CITY + " TEXT," + ZIP + " TEXT," + ADDRESS
                 + " TEXT," + USERACCSTATUS + " TEXT," + SKYPENAME + " TEXT," + COUNTRY_NAME + " TEXT," +
                 PHONE_CODE + " TEXT," + PHONE + " TEXT," + DEVICEID + " TEXT" + ")";
         db.execSQL(CREATE_DETAILS_TABLE);
+
+        /*String CREATE_CARDS_TABLE = "CREATE TABLE " + TABLE_CARD + "(" +
+                CARDID + " TEXT," + CARD_BALANCE + " TEXT," + CARD_MASK + " TEXT," + BANK_ACCOUNT + " TEXT," +
+                CARD_CURRENCY + " TEXT," + CARD_TYPE + " TEXT," + CARD_STATUS + " TEXT," +
+                EXPIRATION_MONTH + " TEXT," + EXPIRATION_YEAR + " TEXT," + CARD_ACCOUNT_ID + " TEXT" + ")";
+        db.execSQL(CREATE_CARDS_TABLE);
+        */
+        String CREATE_CARDS_TABLE = "CREATE TABLE " + TABLE_CARD + "("
+                + CARDID + " TEXT," + CARD_BALANCE + " TEXT," + CARD_MASK + " TEXT," + BANK_ACCOUNT + " TEXT," + CARD_CURRENCY
+                + " TEXT," + CARD_TYPE + " TEXT," + CARD_STATUS + " TEXT," + EXPIRATION_MONTH + " TEXT," + EXPIRATION_YEAR
+                + " TEXT," + CARD_ACCOUNT_ID + " TEXT" + ")";
+        db.execSQL(CREATE_CARDS_TABLE);
 
         Log.d(TAG, "Database tables created");
     }
@@ -221,6 +247,9 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop older table if existed
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_DETAIL);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CARD);
+
 
         // Create tables again
         onCreate(db);
@@ -246,6 +275,30 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         Log.d(TAG, "New user inserted into sqlite: " + id);
     }
 
+    // Saving cards info
+    public void addCards(String cardId,String balance,String cardMask,String bankAcc,String currency
+    ,String cardType,String cardStatus,String expirationMonth,String expirationYear,String cardAccId){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(CARDID,cardId);
+        cv.put(CARD_BALANCE,balance);
+        cv.put(CARD_MASK,cardMask);
+        cv.put(BANK_ACCOUNT,bankAcc);
+        cv.put(CARD_CURRENCY,currency);
+        cv.put(CARD_TYPE,cardType);
+        cv.put(CARD_STATUS,cardStatus);
+        cv.put(EXPIRATION_MONTH,expirationMonth);
+        cv.put(EXPIRATION_YEAR,expirationYear);
+        cv.put(CARD_ACCOUNT_ID,cardAccId);
+
+        long id = db.insert(TABLE_CARD,null,cv);
+        db.close();
+
+        Log.d(TAG,"Card info added into sqlite: " + id);
+    }
+
+    // Saving User Details
     public void addDetails(String status,String firstName,String lastName,String email
             ,String country,String countryAlpha2,String city,String zip,String address,String userAccStatus
     ,String skypename,String phonecode,String phone,String countryname,String deviceid){
@@ -308,6 +361,32 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         return user;
     }
 
+    public HashMap<String,String> getCardInfo(String cardid) {
+        HashMap<String, String> card = new HashMap<String, String>();
+        String selectQuery = "SELECT * FROM " + TABLE_CARD + " WHERE " + CARDID + " = \"" + cardid + "\"";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery,null);
+        cursor.moveToFirst();
+        if (cursor.getCount()>0) {
+            //card.put("CardId", cursor.getString(0));
+            card.put("Balance", cursor.getString(1));
+            card.put("CardMask", cursor.getString(2));
+            card.put("BankAccount", cursor.getString(3));
+            card.put("Currency", cursor.getString(4));
+            card.put("CardType", cursor.getString(5));
+            card.put("Status", cursor.getString(6));
+            card.put("ExpirationMonth", cursor.getString(7));
+            card.put("ExpirationYear", cursor.getString(8));
+            card.put("WalletProviderCardAccountId", cursor.getString(9));
+        }
+        cursor.close();
+        db.close();
+        Log.d(TAG,"Fetching cards from sqlite: " + card.toString());
+
+        return card;
+    }
+
     public HashMap<String,String> getUser() {
         HashMap<String, String> user = new HashMap<String,String>();
         String selectQuery = "SELECT * FROM " + TABLE_USER;
@@ -332,6 +411,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         // Delete All Rows
         db.delete(TABLE_USER, null, null);
+        db.delete(TABLE_DETAIL,null,null);
         db.close();
 
         Log.d(TAG, "Deleted all user info from sqlite");

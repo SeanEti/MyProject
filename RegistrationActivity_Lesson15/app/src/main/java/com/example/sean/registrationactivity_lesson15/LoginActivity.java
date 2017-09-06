@@ -23,6 +23,7 @@ import com.example.sean.registrationactivity_lesson15.App.AppController;
 import com.example.sean.registrationactivity_lesson15.Helper.SQLiteHandler;
 import com.example.sean.registrationactivity_lesson15.Helper.SessionManager;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -155,6 +156,24 @@ public class LoginActivity extends Activity {
 
                                 try {
                                     JSONObject jasun = new JSONObject(response1);
+                                    JSONArray Cards = jasun.getJSONArray("Cards");
+                                    for(int i=0;i<Cards.length();i++){
+                                        JSONObject card = Cards.getJSONObject(i);
+                                        String cardId = card.getString("CardId")
+                                                ,balance = card.getString("Balance")
+                                                ,cardMAsk = card.getString("CardMask")
+                                                ,bankAcc = card.getString("BankAccount")
+                                                ,currency = card.getString("Currency")
+                                                ,cardType = card.getString("CardType")
+                                                ,status = card.getString("Status")
+                                                ,expM = card.getString("ExpirationMonth")
+                                                ,expY = card.getString("ExpirationYear")
+                                                ,cardAccId = card.getString("WalletProviderCardAccountId");
+                                        sqLiteHandler.addCards(cardId,balance,cardMAsk,bankAcc,currency,
+                                                cardType,status,expM,expY,cardAccId);
+
+                                        Toast.makeText(LoginActivity.this, cardId, Toast.LENGTH_SHORT).show();
+                                    }
 
                                     String status = jasun.getString("Status")
                                             ,firstName = jasun.getString("FirstName")
