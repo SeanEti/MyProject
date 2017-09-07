@@ -348,11 +348,11 @@ public class SQLiteHandler extends SQLiteOpenHelper {
             user.put("Zip", cursor.getString(7));
             user.put("Address", cursor.getString(8));
             user.put("UserAccStatus", cursor.getString(9));
-            user.put("SkypeName",cursor.getString(10));
-            user.put("CountryName",cursor.getString(11));
-            user.put("Phonecode",cursor.getString(12));
-            user.put("Phone",cursor.getString(13));
-            user.put("DeviceIdentificator",cursor.getString(14));
+            user.put("SkypeName", cursor.getString(10));
+            user.put("CountryName", cursor.getString(11));
+            user.put("Phonecode", cursor.getString(12));
+            user.put("Phone", cursor.getString(13));
+            user.put("DeviceIdentificator", cursor.getString(14));
         cursor.close();
         db.close();
         // return user
@@ -363,13 +363,13 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 
     public HashMap<String,String> getCardInfo(String cardid) {
         HashMap<String, String> card = new HashMap<String, String>();
+
         String selectQuery = "SELECT * FROM " + TABLE_CARD + " WHERE " + CARDID + " = \"" + cardid + "\"";
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery,null);
         cursor.moveToFirst();
-        if (cursor.getCount()>0) {
-            //card.put("CardId", cursor.getString(0));
+            card.put("CardId", cursor.getString(0));
             card.put("Balance", cursor.getString(1));
             card.put("CardMask", cursor.getString(2));
             card.put("BankAccount", cursor.getString(3));
@@ -379,8 +379,8 @@ public class SQLiteHandler extends SQLiteOpenHelper {
             card.put("ExpirationMonth", cursor.getString(7));
             card.put("ExpirationYear", cursor.getString(8));
             card.put("WalletProviderCardAccountId", cursor.getString(9));
-        }
-        cursor.close();
+            cursor.close();
+
         db.close();
         Log.d(TAG,"Fetching cards from sqlite: " + card.toString());
 

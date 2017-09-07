@@ -41,6 +41,7 @@ public class LoginActivity extends Activity {
     EditText username,password;
     SQLiteHandler sqLiteHandler;
     SessionManager sessionManager;
+    String ids="";
     HashMap<String,String> user;
     ProgressDialog progressDialog;
     String getDetailsUrl;
@@ -169,11 +170,12 @@ public class LoginActivity extends Activity {
                                                 ,expM = card.getString("ExpirationMonth")
                                                 ,expY = card.getString("ExpirationYear")
                                                 ,cardAccId = card.getString("WalletProviderCardAccountId");
+                                        ids = ids+cardId+",";
+
                                         sqLiteHandler.addCards(cardId,balance,cardMAsk,bankAcc,currency,
                                                 cardType,status,expM,expY,cardAccId);
-
-                                        Toast.makeText(LoginActivity.this, cardId, Toast.LENGTH_SHORT).show();
                                     }
+                                    Toast.makeText(LoginActivity.this, ids, Toast.LENGTH_SHORT).show();
 
                                     String status = jasun.getString("Status")
                                             ,firstName = jasun.getString("FirstName")
@@ -215,11 +217,10 @@ public class LoginActivity extends Activity {
                         }
 
 
-
                         // Launch main activity
                         Intent intent = new Intent(LoginActivity.this,
                                 NavigationDrawer.class);
-                        //intent.putExtra("tokenUrl",getDetailsUrl);
+                        //intent.putExtra("cardIds",Ids);
                         startActivity(intent);
                         finish();
                     } else {

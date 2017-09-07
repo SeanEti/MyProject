@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -12,6 +13,8 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -32,6 +35,7 @@ public class NavigationDrawer extends AppCompatActivity {
     ActionBarDrawerToggle actionBarDrawerToggle;
     FragmentTransaction fragment;
     Toolbar toolbar;
+    Spinner spinner;
     DrawerLayout drawer;
     NavigationView navigation;
     SQLiteHandler db;
@@ -49,11 +53,12 @@ public class NavigationDrawer extends AppCompatActivity {
         fragment.add(R.id.frame,new AccountActivity());
         fragment.commit();
 
-        String url = getIntent().getStringExtra("tokenUrl");
+        final String[] n = getIntent().getStringArrayExtra("cardIds");
 
-
+        //String url = getIntent().getStringExtra("tokenUrl");
 
         getSupportActionBar().setTitle("Account");
+        final Fragment fragment1 = new Fragment();
 
         drawer = (DrawerLayout) findViewById(R.id.drawerLayout);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawer,toolbar,R.string.drawer_open,R.string.drawer_close);
@@ -63,6 +68,9 @@ public class NavigationDrawer extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch(item.getItemId()){
                     case R.id.account_item:
+                        Bundle bundle = new Bundle();
+                        bundle.putStringArray("cardIds",n);
+                        fragment1.setArguments(bundle);
                         fragment = getSupportFragmentManager().beginTransaction();
                         fragment.replace(R.id.frame,new AccountActivity());
                         fragment.commit();
