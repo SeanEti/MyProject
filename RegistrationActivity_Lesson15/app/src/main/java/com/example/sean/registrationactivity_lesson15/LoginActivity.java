@@ -29,7 +29,9 @@ import org.json.JSONObject;
 
 import java.lang.reflect.Method;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.net.ssl.SSLContext;
@@ -41,7 +43,7 @@ public class LoginActivity extends Activity {
     EditText username,password;
     SQLiteHandler sqLiteHandler;
     SessionManager sessionManager;
-    String ids="";
+
     HashMap<String,String> user;
     ProgressDialog progressDialog;
     String getDetailsUrl;
@@ -67,11 +69,11 @@ public class LoginActivity extends Activity {
         sqLiteHandler = new SQLiteHandler(getApplicationContext());
         sessionManager = new SessionManager(getApplicationContext());
 
-        if(sessionManager.IsLoggedIn()){
+        /*if(sessionManager.IsLoggedIn()){
             Intent intent = new Intent(LoginActivity.this,NavigationDrawer.class);
             startActivity(intent);
             finish();
-        }
+        }*/
 
         forgotPassView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,7 +139,7 @@ public class LoginActivity extends Activity {
                     String token = jObj.getString("Token");
 
                     // Check for error node in json
-                    if (token!=null) {
+                    if (token!="null") {
                         // user successfully logged in
                         // Create login session
                         sessionManager.SetLogin(true);
@@ -170,12 +172,10 @@ public class LoginActivity extends Activity {
                                                 ,expM = card.getString("ExpirationMonth")
                                                 ,expY = card.getString("ExpirationYear")
                                                 ,cardAccId = card.getString("WalletProviderCardAccountId");
-                                        ids = ids+cardId+",";
-
                                         sqLiteHandler.addCards(cardId,balance,cardMAsk,bankAcc,currency,
                                                 cardType,status,expM,expY,cardAccId);
                                     }
-                                    Toast.makeText(LoginActivity.this, ids, Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(LoginActivity.this, ids.toString(), Toast.LENGTH_SHORT).show();
 
                                     String status = jasun.getString("Status")
                                             ,firstName = jasun.getString("FirstName")
@@ -215,12 +215,10 @@ public class LoginActivity extends Activity {
                         }catch(Exception ex) {
                             ex.printStackTrace();
                         }
-
-
+                        //Toast.makeText(LoginActivity.this, ids.toString(), Toast.LENGTH_SHORT).show();
                         // Launch main activity
                         Intent intent = new Intent(LoginActivity.this,
                                 NavigationDrawer.class);
-                        //intent.putExtra("cardIds",Ids);
                         startActivity(intent);
                         finish();
                     } else {

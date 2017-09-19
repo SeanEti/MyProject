@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -150,7 +151,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.HashMap;
-
+import java.util.List;
 
 
 public class SQLiteHandler extends SQLiteOpenHelper {
@@ -387,6 +388,24 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         return card;
     }
 
+    public List<String> getCardIds(){
+        List<String> ids = new ArrayList<String>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectQuery = "SELECT * FROM " + TABLE_CARD;
+
+        Cursor c = db.rawQuery(selectQuery,null);
+
+        if (c.moveToFirst()){
+            do {
+                ids.add(c.getString(0));
+            }while (c.moveToNext());
+        }
+        c.close();
+        db.close();
+
+        return ids;
+    }
+
     public HashMap<String,String> getUser() {
         HashMap<String, String> user = new HashMap<String,String>();
         String selectQuery = "SELECT * FROM " + TABLE_USER;
@@ -416,10 +435,4 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 
         Log.d(TAG, "Deleted all user info from sqlite");
     }
-
-
-
-
-
-
 }

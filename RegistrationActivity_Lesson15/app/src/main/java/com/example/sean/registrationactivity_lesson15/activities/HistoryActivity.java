@@ -12,8 +12,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.sean.registrationactivity_lesson15.R;
@@ -24,6 +26,7 @@ public class HistoryActivity extends Fragment {
 
     TextView fromDate,toDate;
     Button clear,apply;
+    Spinner spinner1;
 
     @Nullable
     @Override
@@ -34,6 +37,8 @@ public class HistoryActivity extends Fragment {
         toDate = (TextView) view.findViewById(R.id.toDateView);
         clear = (Button) view.findViewById(R.id.clearTopUpBtn);
         apply = (Button) view.findViewById(R.id.applyTopUpBtn);
+        spinner1 = (Spinner) view.findViewById(R.id.transactionSpinner);
+
 
         clear.setOnClickListener(new View.OnClickListener() {
             @Override

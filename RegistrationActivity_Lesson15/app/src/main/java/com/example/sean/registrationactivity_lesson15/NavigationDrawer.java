@@ -45,6 +45,7 @@ public class NavigationDrawer extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation_drawer);
+
         toolbar= (Toolbar) findViewById(R.id.toolbar);
         db = new SQLiteHandler(getApplicationContext());
         sessionManager = new SessionManager(getApplicationContext());
@@ -52,13 +53,7 @@ public class NavigationDrawer extends AppCompatActivity {
         fragment = getSupportFragmentManager().beginTransaction();
         fragment.add(R.id.frame,new AccountActivity());
         fragment.commit();
-
-        final String[] n = getIntent().getStringArrayExtra("cardIds");
-
-        //String url = getIntent().getStringExtra("tokenUrl");
-
-        getSupportActionBar().setTitle("Account");
-        final Fragment fragment1 = new Fragment();
+        setTitle("Account");
 
         drawer = (DrawerLayout) findViewById(R.id.drawerLayout);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawer,toolbar,R.string.drawer_open,R.string.drawer_close);
@@ -68,9 +63,6 @@ public class NavigationDrawer extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch(item.getItemId()){
                     case R.id.account_item:
-                        Bundle bundle = new Bundle();
-                        bundle.putStringArray("cardIds",n);
-                        fragment1.setArguments(bundle);
                         fragment = getSupportFragmentManager().beginTransaction();
                         fragment.replace(R.id.frame,new AccountActivity());
                         fragment.commit();
